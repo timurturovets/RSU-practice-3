@@ -7,7 +7,9 @@
 #define INVALID_PARAMETER (-3)
 #define MEMORY_ALLOCATION_ERROR (-4)
 
-void str_reverse(char* str) {
+int str_reverse(char* str) {
+    if (str == NULL || strlen(str) == 0) return INVALID_PARAMETER;
+
     int start = 0, end = strlen(str) - 1;
 
     char t;
@@ -17,4 +19,6 @@ void str_reverse(char* str) {
         str[end] = t;
         start++; end--;
     }
+
+    return OK;
 }
