@@ -1,5 +1,6 @@
 #pragma once
 #include <string.h>
+#include <ctype.h>
 
 #define OK 0
 #define ERR (-1)
@@ -28,7 +29,7 @@ int str_reverse(char** str) {
         case INVALID_PARAMETER:
             return INVALID_PARAMETER;
         default:
-            return ERR;
+            return result_code;
     }
 
     char* reversed_str = (char*) malloc(sizeof(char) * end + 1);
@@ -50,5 +51,19 @@ int str_len(char* str, int* result) {
     for (char* ptr = s_ptr; *ptr != '\0'; ptr++) len++;
 
     *result = len;
+    return OK;
+}
+
+int change_characters_case(char** str) {
+    if(str == NULL) return INVALID_PARAMETER;
+
+    int len, result_code;
+    if ((result_code = str_len(*str, &len)) != OK) return result_code;
+
+    int dumb_counter = 0;
+    for(char* p_str = *str; *p_str != '\0'; p_str++) {
+        if (dumb_counter++ % 2 == 0) continue;
+        *p_str = toupper(*p_str);
+    }
     return OK;
 }

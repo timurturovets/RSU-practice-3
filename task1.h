@@ -29,18 +29,17 @@ int from_decimal_to_binary(int const num, int const radix, char* const result_pt
     if (num < 0) *presult++ = '-';
     *presult = '\0';
     int result_code = str_reverse(&result);
+
     switch(result_code) {
         case OK:
             strcpy(result_ptr, result);
-            free(buf);
-            free(result);
-            return OK;
-
+            break;
         default:
-            free(buf);
-            free(result);
-            return ERR;
+            break;
     }
+    free(buf);
+    free(result);
+    return result_code;
 }
 
 int task_1() {

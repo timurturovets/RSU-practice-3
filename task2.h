@@ -8,26 +8,26 @@ int task_2(int const argc, char** const argv) {
 
     char** p_argv = argv;
     char* flag = *++p_argv;
+    char* str = *++p_argv;
 
     int result_code;
     if (strcmp(flag, "-l") == 0) {
         int len;
-        char* str = *++p_argv;
         result_code = str_len(str, &len);
         switch (result_code) {
             case OK:
                 printf("Length of the input string: %d", len);
-                return OK;
+                break;
             case INVALID_PARAMETER:
                 PRINT_INVALID_PARAMETER_MESSAGE();
-                return INVALID_PARAMETER;
+                break;
             default:
                 PRINT_ERROR_MESSAGE();
-                return ERR;
+                break;
         }
+        return result_code;
 
     } else if (strcmp(flag, "-r") == 0) {
-        char* str = *++p_argv;
         result_code = str_reverse(&str);
         switch(result_code) {
             case OK:
@@ -40,8 +40,17 @@ int task_2(int const argc, char** const argv) {
             default:
                 PRINT_ERROR_MESSAGE();
         }
-    } else if (strcmp(flag, "-u") == 0) {
 
+    } else if (strcmp(flag, "-u") == 0) {
+        result_code = change_characters_case(&str);
+        if(result_code == OK) {
+            printf("Input string with every odd-placed character's case made upper: ");
+            puts(str);
+            return OK;
+        } else {
+            PRINT_ERROR_MESSAGE();
+            return result_code;
+        }
     } else if (strcmp(flag, "-n") == 0) {
 
     } else if (strcmp(flag, "-c") == 0) {
