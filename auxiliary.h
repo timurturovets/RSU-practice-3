@@ -7,18 +7,48 @@
 #define INVALID_PARAMETER (-3)
 #define MEMORY_ALLOCATION_ERROR (-4)
 
-int str_reverse(char* str) {
-    if (str == NULL || strlen(str) == 0) return INVALID_PARAMETER;
+#define PRINT_ERROR_MESSAGE() printf("Error: unforeseen error. Restarting the program may help.")
+#define PRINT_INVALID_INPUT_MESSAGE() printf("Error: invalid input. Please restart the program and pass proper input values.")
+#define PRINT_INVALID_PARAMETER_MESSAGE() printf("Error: invalid parameter. Restarting the program may help.")
+#define PRINT_MEMORY_ALLOCATION_ERROR() printf("Error: couldn't allocate memory. Restarting the program may help.")
 
-    int start = 0, end = strlen(str) - 1;
+int str_len(char* str, int* result);
 
-    char t;
-    while (start < end) {
-        t = str[start];
-        str[start] = str[end];
-        str[end] = t;
-        start++; end--;
+int str_reverse(char** str) {
+    if(str == NULL) return INVALID_PARAMETER;
+
+    int end;
+    int result_code = str_len(*str, &end);
+    if (end == 0) return INVALID_PARAMETER;
+
+    switch(result_code) {
+        case OK:
+            end--;
+            break;
+        case INVALID_PARAMETER:
+            return INVALID_PARAMETER;
+        default:
+            return ERR;
     }
 
+    char* reversed_str = (char*) malloc(sizeof(char) * end + 1);
+
+    char* p_revstr = reversed_str;
+    while (end >= 0) {
+        *p_revstr++ = (*str)[end--];
+    }
+    *p_revstr = '\0';
+    *str = reversed_str;
+    return OK;
+}
+
+int str_len(char* str, int* result) {
+    if (str == NULL) return INVALID_PARAMETER;
+
+    char* s_ptr = str;
+    int len = 0;
+    for (char* ptr = s_ptr; *ptr != '\0'; ptr++) len++;
+
+    *result = len;
     return OK;
 }

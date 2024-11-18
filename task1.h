@@ -28,7 +28,7 @@ int from_decimal_to_binary(int const num, int const radix, char* const result_pt
 
     if (num < 0) *presult++ = '-';
     *presult = '\0';
-    int result_code = str_reverse(result);
+    int result_code = str_reverse(&result);
     switch(result_code) {
         case OK:
             strcpy(result_ptr, result);
@@ -48,18 +48,18 @@ int task_1() {
 
     printf("Input your number: ");
     if(scanf("%d", &num) != 1) {
-        printf("Error: entered value is invalid.");
+        PRINT_INVALID_INPUT_MESSAGE();
         return INVALID_INPUT;
     }
 
     printf("Input your power of 2: ");
     if(scanf("%d", &radix) != 1) {
-        printf("Error: entered value is invalid.");
+        PRINT_INVALID_INPUT_MESSAGE();
         return INVALID_INPUT;
     }
     char* result = NULL;
     if((result = (char*) malloc(sizeof(char) * BUFSIZ + 1)) == NULL) {
-        printf("Error: couldn't allocate memory. Restarting the program may help.");
+        PRINT_MEMORY_ALLOCATION_ERROR();
         return MEMORY_ALLOCATION_ERROR;
     }
 
@@ -72,17 +72,17 @@ int task_1() {
             return OK;
 
         case INVALID_PARAMETER:
-            printf("Error: invalid parameter. Conditions: 1 <= radix <= 5");
+            PRINT_INVALID_PARAMETER_MESSAGE();
             free(result);
             return INVALID_PARAMETER;
 
         case MEMORY_ALLOCATION_ERROR:
-            printf("Error: couldn't allocate memory. Restarting the program may help.");
+            PRINT_MEMORY_ALLOCATION_ERROR();
             free(result);
             return MEMORY_ALLOCATION_ERROR;
 
         default:
-            printf("Error: unforeseen error. Restarting the program may help.");
+            PRINT_MEMORY_ALLOCATION_ERROR();
             free(result);
             return ERR;
     }
