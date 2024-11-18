@@ -103,15 +103,18 @@ int shift_characters(char** str) {
 int is_in_array(int* array, size_t size, int value);
 
 int random_concat(char** strings, int count, unsigned int seed, char** result) {
-    if(strings == NULL || count == 0 || result == NULL) return INVALID_PARAMETER;
+    if(strings == NULL || count == 0) return INVALID_PARAMETER;
 
+    if (*result != NULL) free(*result);
     srand(seed);
 
-    int* checked = (int*) malloc(sizeof(int) * count);
+    int* checked = NULL;
+    if((checked = (int*) malloc(sizeof(int) * count)) == NULL) return MEMORY_ALLOCATION_ERROR;
     int* p_checked = checked;
 
     char** p_strings = strings;
-    char* new_string = (char*) malloc(sizeof(char) * BUFSIZ * count + 1);
+    char* new_string = NULL;
+    if((new_string = (char*) malloc(sizeof(char) * BUFSIZ * count + 1)) == NULL) return MEMORY_ALLOCATION_ERROR;
     char* p_newstr = new_string;
     int i, random_index;
     for(i = 0; i < count; i++) {

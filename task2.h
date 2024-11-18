@@ -100,15 +100,26 @@ int task_2(int const argc, char** const argv) {
             *p_strings = *p_argv++;
         }
 
-        char* result = (char*) malloc(sizeof(char) * BUFSIZ * str_count + 1);
+        char* result = NULL;
         result_code = random_concat(strings, str_count, seed, &result);
         switch (result_code) {
             case OK:
                 printf("After randomly concatenating input strings: ");
                 puts(result);
                 break;
+            case INVALID_PARAMETER:
+                PRINT_INVALID_PARAMETER_MESSAGE();
+                break;
+            case MEMORY_ALLOCATION_ERROR:
+                PRINT_MEMORY_ALLOCATION_ERROR();
+                break;
+            default:
+                PRINT_ERROR_MESSAGE();
+                break;
         }
-
+        free(result);
+        free(strings);
+        return result_code;
     } else {
         printf("Error: invalid flag. Please restart the program and pass proper flag value.");
         return INVALID_PARAMETER;
