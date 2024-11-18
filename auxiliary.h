@@ -14,9 +14,12 @@
 #define PRINT_MEMORY_ALLOCATION_ERROR() printf("Error: couldn't allocate memory. Restarting the program may help.")
 
 int str_len(char* str, int* result);
+int str_reverse(char** str);
+int change_characters_case(char** str);
+int shift_characters(char** str);
 
 int str_reverse(char** str) {
-    if(str == NULL) return INVALID_PARAMETER;
+    if(str == NULL || *str == NULL) return INVALID_PARAMETER;
 
     int end;
     int result_code = str_len(*str, &end);
@@ -32,14 +35,18 @@ int str_reverse(char** str) {
             return result_code;
     }
 
-    char* reversed_str = (char*) malloc(sizeof(char) * end + 1);
+    char* reversed_str = NULL;
+    if ((reversed_str = (char*) malloc(sizeof(char) * end + 1)) == NULL) return MEMORY_ALLOCATION_ERROR;
 
     char* p_revstr = reversed_str;
     while (end >= 0) {
         *p_revstr++ = (*str)[end--];
     }
     *p_revstr = '\0';
+
+    free(*str);
     *str = reversed_str;
+
     return OK;
 }
 
@@ -55,7 +62,7 @@ int str_len(char* str, int* result) {
 }
 
 int change_characters_case(char** str) {
-    if(str == NULL) return INVALID_PARAMETER;
+    if(str == NULL || *str == NULL) return INVALID_PARAMETER;
 
     int len, result_code;
     if ((result_code = str_len(*str, &len)) != OK) return result_code;
@@ -65,5 +72,29 @@ int change_characters_case(char** str) {
         if (dumb_counter++ % 2 == 0) continue;
         *p_str = toupper(*p_str);
     }
+    return OK;
+}
+
+int shift_characters(char** str) {
+    if (str == NULL || *str == NULL) return INVALID_PARAMETER;
+
+    int len, result_code;
+    if((result_code = str_len(*str, &len)) != OK) return result_code;
+    if(len == 0) return INVALID_PARAMETER;
+
+    char* result = NULL;
+    if ((result = (char*) malloc(sizeof(char) * len + 1)) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    char* p_result = result;
+    char* p_str = *str;
+    for(; *p_str != '\0'; p_str++) if (isdigit(*p_str)) *p_result++ = *p_str;
+
+    for (p_str = *str; *p_str != '\0'; p_str++) if (isalpha(*p_str)) *p_result++ = *p_str;
+
+    for (p_str = *str; *p_str != '\0'; p_str++) if(!isdigit(*p_str) && !isalpha(*p_str)) *p_result++ = *p_str;
+
+    *p_result++ = '\0';
+    *str = result;
+
     return OK;
 }

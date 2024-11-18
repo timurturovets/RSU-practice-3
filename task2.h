@@ -33,13 +33,19 @@ int task_2(int const argc, char** const argv) {
             case OK:
                 printf("Reversed input string: ");
                 puts(str);
-                return OK;
+                break;
             case INVALID_PARAMETER:
                 PRINT_INVALID_PARAMETER_MESSAGE();
-                return INVALID_PARAMETER;
+                break;
+            case MEMORY_ALLOCATION_ERROR:
+                PRINT_MEMORY_ALLOCATION_ERROR();
+                break;
             default:
                 PRINT_ERROR_MESSAGE();
+                break;
         }
+
+        return result_code;
 
     } else if (strcmp(flag, "-u") == 0) {
         result_code = change_characters_case(&str);
@@ -51,7 +57,19 @@ int task_2(int const argc, char** const argv) {
             PRINT_ERROR_MESSAGE();
             return result_code;
         }
+
     } else if (strcmp(flag, "-n") == 0) {
+        result_code = shift_characters(&str);
+        switch (result_code) {
+            case OK:
+                printf("Input string after tidy-shifting all characters: ");
+                puts(str);
+                break;
+            case INVALID_PARAMETER:
+                PRINT_INVALID_PARAMETER_MESSAGE();
+                break;
+        }
+        return result_code;
 
     } else if (strcmp(flag, "-c") == 0) {
 

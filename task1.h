@@ -11,7 +11,7 @@ int from_decimal_to_binary(int const num, int const radix, char* const result_pt
     int num_copy = abs(num), real_radix = pow(2, radix);
 
     char* result = NULL;
-    if((result = (char*) malloc((BUFSIZ+1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+    if ((result = (char*) malloc((BUFSIZ+1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
     char* presult = result;
 
     char* buf = NULL;
