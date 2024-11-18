@@ -17,6 +17,7 @@ int str_len(char* str, int* result);
 int str_reverse(char** str);
 int change_characters_case(char** str);
 int shift_characters(char** str);
+int random_concat(char** strings, int count, unsigned int seed, char** result);
 
 int str_reverse(char** str) {
     if(str == NULL || *str == NULL) return INVALID_PARAMETER;
@@ -97,4 +98,46 @@ int shift_characters(char** str) {
     *str = result;
 
     return OK;
+}
+
+int is_in_array(int* array, size_t size, int value);
+
+int random_concat(char** strings, int count, unsigned int seed, char** result) {
+    if(strings == NULL || count == 0 || result == NULL) return INVALID_PARAMETER;
+
+    srand(seed);
+
+    int* checked = (int*) malloc(sizeof(int) * count);
+    int* p_checked = checked;
+
+    char** p_strings = strings;
+    char* new_string = (char*) malloc(sizeof(char) * BUFSIZ * count + 1);
+    char* p_newstr = new_string;
+    int i, random_index;
+    for(i = 0; i < count; i++) {
+        do {
+            random_index = rand() % (count);
+        } while(is_in_array(checked, count, random_index));
+        *p_checked++ = random_index;
+
+        char* current_str = p_strings[random_index];
+
+        char* p_currstr = current_str;
+
+        for(; *p_currstr != '\0'; p_currstr++) {
+            *p_newstr++ = *p_currstr;
+        }
+    }
+    *result = new_string;
+
+    return OK;
+}
+
+int is_in_array(int* array, size_t size, int value) {
+    int* p_array = array;
+
+    for(int i = 0; i < size; i++) {
+        if(*p_array++ == value) return 1;
+    }
+    return 0;
 }
