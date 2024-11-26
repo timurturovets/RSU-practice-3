@@ -32,11 +32,15 @@ int multiple_free(int flag, ...) {
     if (flag != 'f' && flag != 'm') return INVALID_PARAMETER;
 
     va_list p_args;
+    va_start(p_args, flag);
 
     while (1) {
         void* resource = va_arg(p_args, void*);
 
-        if(resource == NULL) return OK;
+        if(resource == NULL) {
+            va_end(p_args);
+            return OK;
+        }
 
         if (flag == 'm') {
             printf("Freeing memory at address %p\n", resource);
@@ -44,7 +48,10 @@ int multiple_free(int flag, ...) {
         } else if (flag == 'f') {
             printf("Closing file at address %p\n", resource);
             fclose(resource);
-        } else return INVALID_PARAMETER;
+        } else {
+            va_end(p_args);
+            return INVALID_PARAMETER;
+        }
 
         flag = va_arg(p_args, int);
     }
