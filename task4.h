@@ -8,7 +8,7 @@ int search_str_in_file(char const * const substr,
                        int ** result_rows,
                        int ** result_columns);
 
-int task_4(int argc, char** argv) {
+int task_4() {
     char* substr = (char*) malloc(sizeof(char) * BUFSIZ + 1);
     if (substr == NULL) {
         PRINT_MEMORY_ALLOCATION_ERROR();
@@ -17,6 +17,7 @@ int task_4(int argc, char** argv) {
 
     printf("Enter your substring: ");
     gets(substr);
+    printf("\n");
 
     int len;
     int result_code = str_len(substr, &len); //declared in auxiliary.h
@@ -25,9 +26,25 @@ int task_4(int argc, char** argv) {
         return INVALID_INPUT;
     }
 
-    char *file1_path = "D:\\meow.txt", *file2_path = "file2.txt", *file3_path = "file3.txt";
+    char *file1_path = "D:\\meow.txt", *file2_path = "D:\\bzz.txt", *file3_path = "D:\\bark.txt";
 
-    result_code = search_str_in_files(substr, file1_path, NULL);//, file2_path, file3_path, NULL);
+    result_code = search_str_in_files(substr, file1_path, file2_path, file3_path, NULL);
+    switch (result_code) {
+        case OK:
+            return OK;
+        case INVALID_PARAMETER:
+            PRINT_INVALID_PARAMETER_MESSAGE();
+            return INVALID_PARAMETER;
+        case INVALID_INPUT:
+            PRINT_INVALID_INPUT_MESSAGE();
+            return INVALID_INPUT;
+        case MEMORY_ALLOCATION_ERROR:
+            PRINT_MEMORY_ALLOCATION_ERROR();
+            return MEMORY_ALLOCATION_ERROR;
+        default:
+            PRINT_ERROR_MESSAGE();
+            return ERR;
+    }
 }
 
 int search_str_in_files(char* substr, ...) {
@@ -63,8 +80,10 @@ int search_str_in_files(char* substr, ...) {
         }
     }
 
+    va_end(p_args);
     free(result_rows);
     free(result_columns);
+    return OK;
 }
 
 int search_str_in_file(const char * const substr, const char * const file_path, size_t* result_count,
@@ -93,7 +112,6 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
     while(!feof(f_ptr)) {
         fscanf(f_ptr, "%c", &curr_c);
         col++;
-        printf("currc: %c, sub: %c\n", curr_c, *p_sub);
 
         if (curr_c == '\n') {
             row++;
@@ -102,7 +120,6 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
 
         if (curr_c == *p_sub) {
             p_sub++;
-            printf("START\n");
             start_row = row;
             start_col = col;
 
@@ -114,10 +131,8 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
                 if (curr_c == '\n') {
                     row++; col = 0;
                 }
-                printf("now curr: %c, sub: %c, len: %d, i: %d\n", curr_c, *p_sub, len, i);
 
                 if (curr_c != *p_sub++) {
-                    printf("so break\n\n");
                     flag = 0;
                     p_sub = substr;
                     break;
@@ -130,7 +145,6 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
                 (*result_count)++;
 
                 p_sub = substr;
-                printf("found!!!!! %d %d\n", start_row, start_col);
             }
         }
     }
