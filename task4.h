@@ -42,10 +42,20 @@ int search_str_in_files(char* substr, ...) {
         arg = va_arg(p_args, void*);
         if (arg == NULL) break;
 
-        size_t count;
+        size_t count = 0;
         int result_code = search_str_in_file(substr, arg, &count, &result_rows, &result_columns);
         switch(result_code) {
             case OK:
+                printf("File path: ");
+                puts(arg);
+                if (count == 0) printf("Your substring is not present in the file.\n\n");
+                else {
+                    printf("Your substring is found in the file at:\n");
+                    for (int i = 0; i < count; i++) {
+                        printf("Row: %d, column: %d\n", result_rows[i], result_columns[i]);
+                    }
+                    printf("\n");
+                }
                 break;
             default:
                 PRINT_ERROR_MESSAGE();
@@ -70,6 +80,7 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
     *result_rows = (int*) malloc(BUFSIZ * sizeof(int));
     *result_columns = (int*) malloc(BUFSIZ * sizeof(int));
     if(result_rows == NULL || result_columns == NULL) return MEMORY_ALLOCATION_ERROR;
+    int* p_res_rows = *result_rows, *p_res_cols = *result_columns;
 
     char curr_c;
     char const * p_sub = substr;
@@ -114,15 +125,14 @@ int search_str_in_file(const char * const substr, const char * const file_path, 
             }
 
             if (flag) {
-                **result_rows = start_row;
-                **result_columns = start_col;
-                result_rows++;
-                result_columns++;
+                *p_res_rows++ = start_row;
+                *p_res_cols++ = start_col;
+                (*result_count)++;
 
                 p_sub = substr;
                 printf("found!!!!! %d %d\n", start_row, start_col);
             }
         }
     }
-
+    return OK;
 }
