@@ -70,3 +70,12 @@ int is_in_array(int* array, size_t size, int value) {
     }
     return 0;
 }
+
+// pozornaya funkciya sori
+int integer_len(int num) {
+    int c = 0;
+    while(num != 0) {
+        c++; num /= 10;
+    }
+    return c;
+}
