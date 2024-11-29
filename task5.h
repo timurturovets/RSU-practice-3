@@ -71,10 +71,18 @@ int is_convex(int* result, int count, ...) {
 
         if (det <= 0) {
             *result = 0;
+
+            free(points_x);
+            free(points_y);
+
             return OK;
         }
     }
 
     *result = 1;
+
+    free(points_x);
+    free(points_y);
+
     return OK;
 }

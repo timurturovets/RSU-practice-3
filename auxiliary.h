@@ -79,3 +79,15 @@ int integer_len(int num) {
     }
     return c;
 }
+
+int ctod(char c) {
+    if (c >= '0' && c <= '9') return c - '0';
+    else if (c >= 'A' && c <= 'Z') return 10 + (c - 'A');
+    else return -1;
+}
+
+char dtoc(int digit) {
+    if (digit >= 0 && digit <= 9) return '0' + digit;
+    else if (digit >= 10 && digit <= 35) return 'A' + (digit - 10);
+    else return -1;
+}
