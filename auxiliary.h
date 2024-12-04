@@ -91,3 +91,28 @@ char dtoc(int digit) {
     else if (digit >= 10 && digit <= 35) return 'A' + (digit - 10);
     else return -1;
 }
+
+int get_fibonacci_seq(int ** const result, int * const result_count, int const number) {
+    if (result == NULL || number < 2) return INVALID_PARAMETER;
+
+    if (*result != NULL) free(*result);
+    if ((*result = (int*) malloc(number * sizeof(int))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    int prev, mega_prev, * p_res = *result;
+    *p_res++ = 0;
+    *p_res++ = 1;
+
+    *result_count = 2;
+    while(1) {
+
+        prev = *--p_res;
+        mega_prev = *--p_res;
+        if (prev + mega_prev > number) break;
+        p_res++; p_res++;
+
+        *p_res++ = prev + mega_prev;
+        (*result_count)++;
+    }
+    return OK;
+}
+

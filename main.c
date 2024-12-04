@@ -6,6 +6,7 @@
 #include "task6.h"
 #include "task7.h"
 #include "task8.h"
+#include "task9.h"
 
 int main(int argc, char** argv) {
     // return task_1();
@@ -15,5 +16,6 @@ int main(int argc, char** argv) {
     // return task_5();
     // return task_6();
     // return task_7();
-    return task_8();
+    // return task_8();
+    return task_9();
 }
