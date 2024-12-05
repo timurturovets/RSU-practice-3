@@ -16,6 +16,12 @@
 int str_len(char* str, int* result);
 int str_reverse(char** str);
 int is_in_array(int* array, size_t size, int value);
+int integer_len(int num);
+int ctod(char c);
+char dtoc(int digit);
+int get_fibonacci_seq(int ** const result, int * const result_count, int const number);
+int get_zeckendorf_representation(char ** const result, unsigned int const number);
+
 
 int str_reverse(char** str) {
     if(str == NULL || *str == NULL) return INVALID_PARAMETER;
@@ -116,3 +122,112 @@ int get_fibonacci_seq(int ** const result, int * const result_count, int const n
     return OK;
 }
 
+int get_zeckendorf_representation(char ** const result, unsigned int const number) {
+    if (result == NULL) return INVALID_PARAMETER;
+    int i, flag, *fib_res = NULL, count = 0, result_code;
+    unsigned int num_copy = number;
+
+    result_code = get_fibonacci_seq(&fib_res, &count, number);
+    if (result_code != OK) return result_code;
+
+    if (*result != NULL) free(*result);
+    if ((*result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    char* buf = NULL, *p_res = *result;
+    if ((buf = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+    itoa(fib_res[count - 1], buf, 10);
+    strcat(buf, "+");
+    strcpy(p_res, buf);
+    num_copy -= fib_res[count - 1];
+
+    flag = 0;
+    for (i = count - 2; i >= 0 && num_copy > 0; i--) {
+        if((buf = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+        if (num_copy >= fib_res[i]) {
+            num_copy -= fib_res[i];
+            itoa(fib_res[i], buf, 10);
+            if (flag) {
+                strcat(p_res, "+");
+                strcat(p_res, buf);
+            } else {
+                strcat(p_res,  buf);
+                flag = 1;
+            }
+        }
+    }
+
+    return OK;
+}
+
+int get_roman_representation(char ** const result, int const number) {
+    if (result == NULL) return INVALID_PARAMETER;
+
+    if (*result != NULL) free(*result);
+    if ((*result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    char *p_res = *result;
+    int i, thousands_count, hundreds_count, tens_count, units_count;
+
+    thousands_count = number / 1000;
+    for (i = 0; i < thousands_count; i++) {
+        *p_res++ = 'M';
+    }
+
+    hundreds_count = (number % 1000) / 100;
+    if (hundreds_count == 9) {
+        *p_res++ = 'C';
+        *p_res++ = 'M';
+    } else if (hundreds_count == 4) {
+        *p_res++ = 'C';
+        *p_res++ = 'D';
+    } else {
+        if (hundreds_count >= 5) {
+            *p_res++ = 'D';
+            hundreds_count -= 5;
+        }
+
+        for (i = 0; i < hundreds_count; i++) {
+            *p_res++ = 'C';
+        }
+    }
+
+    tens_count = (number % 100) / 10;
+    if (tens_count == 9) {
+        *p_res++ = 'X';
+        *p_res++ = 'C';
+    } else if (tens_count == 4) {
+        *p_res++ = 'X';
+        *p_res++ = 'L';
+    } else {
+        if (tens_count >= 5) {
+            *p_res++ = 'L';
+            hundreds_count -= 5;
+        }
+
+        for (i = 0; i < tens_count; i++) {
+            *p_res++ = 'X';
+        }
+    }
+
+    units_count = number % 10;
+    if (units_count == 9) {
+        *p_res++ = 'I';
+        *p_res++ = 'X';
+    } else if (units_count == 4) {
+        *p_res++ = 'I';
+        *p_res++ = 'V';
+    } else {
+        if (units_count >= 5) {
+            *p_res++ = 'V';
+            units_count -= 5;
+        }
+
+        for (i = 0; i < units_count; i++) {
+            *p_res++ = 'I';
+        }
+    }
+
+    *p_res++ = '\0';
+    puts(*result);
+}
