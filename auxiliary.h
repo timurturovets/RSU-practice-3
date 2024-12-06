@@ -236,16 +236,17 @@ int get_roman_representation(char ** const result, int const number) {
 }
 
 int to_any(char ** const result, int num, int b, int should_be_uppercase) {
-    if(result == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
+    if (result == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
 
-    char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    char digit, *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             *new_result = (char*) malloc(BUFSIZ * sizeof(char));
     char *new_res_ptr = new_result;
     int sign = num >= 0 ? 1 : -1;
     num *= sign;
 
     while (num != 0) {
-        *new_res_ptr++ = digits[num % b];
+        digit = digits[num % b];
+        *new_res_ptr++ = should_be_uppercase ? digit : tolower(digit);
         num /= b;
     }
 
@@ -253,11 +254,6 @@ int to_any(char ** const result, int num, int b, int should_be_uppercase) {
     *new_res_ptr = '\0';
     str_reverse(&new_result);
 
-    if (!should_be_uppercase) {
-        new_res_ptr = new_result;
-
-
-    }
     free(*result);
 
     *result = new_result;

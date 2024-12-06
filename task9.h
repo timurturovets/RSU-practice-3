@@ -21,7 +21,7 @@ int task_9() {
     printf("roman result: ");
     puts(result);
 
-    to_any(&result, number, 16, 1);
+    to_any(&result, number, 16, 0);
     printf("to base result: ");
     puts(result);
 
