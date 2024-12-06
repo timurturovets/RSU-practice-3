@@ -21,7 +21,7 @@ int ctod(char c);
 char dtoc(int digit);
 int get_fibonacci_seq(int ** const result, int * const result_count, int const number);
 int get_zeckendorf_representation(char ** const result, unsigned int const number);
-
+int to_any(char ** const result, int num, int b, int should_be_uppercase);
 
 int str_reverse(char** str) {
     if(str == NULL || *str == NULL) return INVALID_PARAMETER;
@@ -29,7 +29,7 @@ int str_reverse(char** str) {
     int end;
     int result_code = str_len(*str, &end);
     if (end == 0) return INVALID_PARAMETER;
-
+    printf("end: %d\n", end);
     switch(result_code) {
         case OK:
             end--;
@@ -45,6 +45,7 @@ int str_reverse(char** str) {
 
     char* p_revstr = reversed_str;
     while (end >= 0) {
+        printf("curr: %c\n", (*str)[end]);
         *p_revstr++ = (*str)[end--];
     }
     *p_revstr = '\0';
@@ -142,6 +143,7 @@ int get_zeckendorf_representation(char ** const result, unsigned int const numbe
 
     flag = 0;
     for (i = count - 2; i >= 0 && num_copy > 0; i--) {
+        if (buf != NULL) free(buf);
         if((buf = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
 
         if (num_copy >= fib_res[i]) {
@@ -157,6 +159,7 @@ int get_zeckendorf_representation(char ** const result, unsigned int const numbe
         }
     }
 
+    free(buf);
     return OK;
 }
 
@@ -229,5 +232,35 @@ int get_roman_representation(char ** const result, int const number) {
     }
 
     *p_res++ = '\0';
-    puts(*result);
+    return OK;
+}
+
+int to_any(char ** const result, int num, int b, int should_be_uppercase) {
+    if(result == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
+
+    char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            *new_result = (char*) malloc(BUFSIZ * sizeof(char));
+    char *new_res_ptr = new_result;
+    int sign = num >= 0 ? 1 : -1;
+    num *= sign;
+
+    while (num != 0) {
+        *new_res_ptr++ = digits[num % b];
+        num /= b;
+    }
+
+    if (sign == -1) *new_res_ptr++ = '-';
+    *new_res_ptr = '\0';
+    str_reverse(&new_result);
+
+    if (!should_be_uppercase) {
+        new_res_ptr = new_result;
+
+
+    }
+    free(*result);
+
+    *result = new_result;
+
+    return OK;
 }
