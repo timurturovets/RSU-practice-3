@@ -19,7 +19,6 @@ int from_decimal_to_binary(int const num, int const radix, char ** const result)
     if (*result != NULL) free(*result);
     if ((*result = (char*) malloc((BUFSIZ + 1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
     p_result = *result;
-
     if ((digits = (unsigned short *) malloc(BUFSIZ * sizeof(unsigned short))) == NULL) {
         free(result);
         return MEMORY_ALLOCATION_ERROR;
@@ -39,7 +38,8 @@ int from_decimal_to_binary(int const num, int const radix, char ** const result)
     }
     *p_result = '\0';
 
-    free (result)
+    free(digits);
+
     return OK;
 }
 
@@ -68,22 +68,19 @@ int task_1() {
         case OK:
             printf("Result: ");
             puts(result);
-            free(result);
-            return OK;
-
+            break;
         case INVALID_PARAMETER:
             PRINT_INVALID_PARAMETER_MESSAGE();
-            free(result);
-            return INVALID_PARAMETER;
-
+            break;
         case MEMORY_ALLOCATION_ERROR:
             PRINT_MEMORY_ALLOCATION_ERROR();
-            free(result);
-            return MEMORY_ALLOCATION_ERROR;
-
+            break;
         default:
             PRINT_MEMORY_ALLOCATION_ERROR();
-            free(result);
-            return ERR;
+            break;
     }
+
+    free(result);
+
+    return result_code;
 }
