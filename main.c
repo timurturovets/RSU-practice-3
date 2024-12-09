@@ -9,7 +9,7 @@
 #include "task9.h"
 
 int main(int argc, char** argv) {
-    // return task_1();
+    return task_1();
     // return task_2(argc, argv);
     // return task_3();
     // return task_4();
@@ -17,5 +17,5 @@ int main(int argc, char** argv) {
     // return task_6();
     // return task_7();
     // return task_8();
-    return task_9();
+    // return task_9();
 }

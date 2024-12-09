@@ -16,13 +16,15 @@ int task_6() {
     }
 }
 
+// реализовать схему Горнера для вычисления многочлена в заданной точке
 int polynomial_value(double* const result, double const point, int const power, ...) {
     va_list p_args;
     va_start(p_args, power);
 
     double coefficient;
     double value = 0.0;
-    for(int i = power; i >= 0; i--) {
+    int i;
+    for(i = power; i >= 0; i--) {
         coefficient = va_arg(p_args, double);
         value += coefficient * pow(point, i);
     }

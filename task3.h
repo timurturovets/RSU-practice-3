@@ -5,16 +5,15 @@ int multiple_free(int flag, ...);
 
 int task_3() {
     FILE* file1 = fopen("file1.txt", "w");
-    FILE* file2 = fopen("file2.txt", "r");
     char* resource1 = (char*) malloc(BUFSIZ * sizeof(char));
     int* resource2 = (int*) malloc(256 * sizeof(int));
 
-    if (file1 == NULL || file2 == NULL || resource1 == NULL || resource2 == NULL) {
-        PRINT_MEMORY_ALLOCATION_ERROR();
-        return MEMORY_ALLOCATION_ERROR;
+    if (file1 == NULL || resource1 == NULL || resource2 == NULL) {
+        PRINT_INVALID_INPUT_MESSAGE();
+        return INVALID_INPUT;
     }
 
-    int result_code = multiple_free('f', file1, 'm', resource2, 'f', file2, 'm', resource1, 'q', NULL);
+    int result_code = multiple_free('f', file1, 'm', resource2, 'f', resource1, 'q', NULL);
     switch (result_code){
         case OK:
             printf("Program complete.\n");

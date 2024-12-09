@@ -21,7 +21,8 @@ int ctod(char c);
 char dtoc(int digit);
 int get_fibonacci_seq(int ** const result, int * const result_count, int const number);
 int get_zeckendorf_representation(char ** const result, unsigned int const number);
-int to_any(char ** const result, int num, int b, int should_be_uppercase);
+int from_dec_to_any(char ** const result, int num, int b, int should_be_uppercase);
+int from_any_to_dec(int * const result, char const * const num, int const b);
 
 int str_reverse(char** str) {
     if(str == NULL || *str == NULL) return INVALID_PARAMETER;
@@ -29,7 +30,6 @@ int str_reverse(char** str) {
     int end;
     int result_code = str_len(*str, &end);
     if (end == 0) return INVALID_PARAMETER;
-    printf("end: %d\n", end);
     switch(result_code) {
         case OK:
             end--;
@@ -45,7 +45,6 @@ int str_reverse(char** str) {
 
     char* p_revstr = reversed_str;
     while (end >= 0) {
-        printf("curr: %c\n", (*str)[end]);
         *p_revstr++ = (*str)[end--];
     }
     *p_revstr = '\0';
@@ -59,9 +58,9 @@ int str_reverse(char** str) {
 int str_len(char* str, int* result) {
     if (str == NULL) return INVALID_PARAMETER;
 
-    char* s_ptr = str;
+    char* s_ptr = str, *ptr = NULL;
     int len = 0;
-    for (char* ptr = s_ptr; *ptr != '\0'; ptr++) len++;
+    for (ptr = s_ptr; *ptr != '\0'; ptr++) len++;
 
     *result = len;
     return OK;
@@ -70,9 +69,9 @@ int str_len(char* str, int* result) {
 
 
 int is_in_array(int* array, size_t size, int value) {
-    int* p_array = array;
+    int i, * p_array = array;
 
-    for(int i = 0; i < size; i++) {
+    for(i = 0; i < size; i++) {
         if(*p_array++ == value) return 1;
     }
     return 0;
@@ -205,7 +204,7 @@ int get_roman_representation(char ** const result, int const number) {
     } else {
         if (tens_count >= 5) {
             *p_res++ = 'L';
-            hundreds_count -= 5;
+            tens_count -= 5;
         }
 
         for (i = 0; i < tens_count; i++) {
@@ -235,7 +234,7 @@ int get_roman_representation(char ** const result, int const number) {
     return OK;
 }
 
-int to_any(char ** const result, int num, int b, int should_be_uppercase) {
+int from_dec_to_any(char ** const result, int num, int b, int should_be_uppercase) {
     if (result == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
 
     char digit, *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -259,4 +258,50 @@ int to_any(char ** const result, int num, int b, int should_be_uppercase) {
     *result = new_result;
 
     return OK;
+}
+/*
+int from_any_to_dec(int * const result, char const * const num, int const b) {
+    if (result == NULL || num == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
+
+    int i, curr_val, len = strlen(num), res = 0, power = 1;
+    char curr_digit;
+
+    for (i = len; i >= 0; i--) {
+        curr_digit = tolower(num[i]);
+
+        if (isalpha(curr_digit)) curr_val = curr_digit - 'a' + 10;
+        else curr_val
+    }
+}*/
+int from_any_to_dec(int * const result, char const * const num, int const base) {
+    if (result == NULL || num == NULL || base < 2 || base > 36) return INVALID_PARAMETER;
+
+    int i = 0, res = 0, len = strlen(num), value, sign = 1;
+    char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    if(num[0] == '-') {
+        sign = -1;
+        i++;
+    }
+    for(;i < len; i++) {
+        char _ = num[i];
+        value = strcspn(digits, &_);
+        if (i == len - 1) {
+            res += value;
+            break;
+        }
+
+        res += value;
+        res *= base;
+    }
+    res *= sign;
+
+    *result = res;
+    return OK;
+}
+
+int get_int_mem_dump(char ** const result, int const var) {
+    if (result == NULL) return INVALID_PARAMETER;
+
+
 }

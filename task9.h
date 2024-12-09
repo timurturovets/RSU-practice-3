@@ -21,9 +21,12 @@ int task_9() {
     printf("roman result: ");
     puts(result);
 
-    to_any(&result, number, 16, 0);
+    from_dec_to_any(&result, number, 16, 1);
     printf("to base result: ");
     puts(result);
+
+    int code = from_any_to_dec(&number, "1F",16);
+    printf("test result: %d", number);
 
     free(result);
     return OK;

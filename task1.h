@@ -5,41 +5,42 @@
 #include <stdio.h>
 #include "auxiliary.h"
 
-int from_decimal_to_binary(int const num, int const radix, char* const result_ptr) {
-    if (radix < 1 || radix > 5) return INVALID_PARAMETER;
+int from_decimal_to_binary(int const num, int const radix, char ** const result) {
+    if (result == NULL || radix < 1 || radix > 5) return INVALID_PARAMETER;
 
-    int num_copy = abs(num), real_radix = pow(2, radix);
+    int i,
+        num_copy = abs(num),
+        real_radix = 1 << radix,
+        digits_len = 0;
 
-    char* result = NULL;
-    if ((result = (char*) malloc((BUFSIZ+1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
-    char* presult = result;
+    unsigned short *digits = NULL, *p_digits;
+    char *p_result, *all_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    char* buf = NULL;
-    if((buf = (char*) malloc(sizeof(char)*2)) == NULL) {
+    if (*result != NULL) free(*result);
+    if ((*result = (char*) malloc((BUFSIZ + 1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+    p_result = *result;
+
+    if ((digits = (unsigned short *) malloc(BUFSIZ * sizeof(unsigned short))) == NULL) {
         free(result);
         return MEMORY_ALLOCATION_ERROR;
     }
+    p_digits = digits;
 
-    while(num_copy != 0) {
-        itoa(num_copy & (real_radix - 1), buf, real_radix);
-        *presult++ = *buf;
+    while (num_copy != 0) {
+        *p_digits++ = num_copy & (real_radix - 1);
         num_copy >>= radix;
+        digits_len++;
     }
 
-    if (num < 0) *presult++ = '-';
-    *presult = '\0';
-    int result_code = str_reverse(&result);
+    if (num < 0) *p_result++ = '-';
 
-    switch(result_code) {
-        case OK:
-            strcpy(result_ptr, result);
-            break;
-        default:
-            break;
+    for (i = digits_len - 1; i >= 0; i--) {
+        *p_result++ = all_chars[digits[i]];
     }
-    free(buf);
-    free(result);
-    return result_code;
+    *p_result = '\0';
+
+    free (result)
+    return OK;
 }
 
 int task_1() {
@@ -62,7 +63,7 @@ int task_1() {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int result_code = from_decimal_to_binary(num, radix, result);
+    int result_code = from_decimal_to_binary(num, radix, &result);
     switch(result_code) {
         case OK:
             printf("Result: ");
@@ -86,11 +87,3 @@ int task_1() {
             return ERR;
     }
 }
-
-// input data validation +
-// functions parameters quantity validation +
-// memory allocation validation
-// memory release
-// functions error codes, handling
-// comparing doubles with epsilon 0
-// restrain parameters modification in functions

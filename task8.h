@@ -9,7 +9,7 @@ int task_8() {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int result_code = notation_sum(&result, 11, 3, "4223", "523", "716");
+    int result_code = notation_sum(&result, 16, 4, "AAAAAA00090894225", "CCCCCCCCCCCCCCCCCC525", "71555");
 
     switch(result_code) {
         case OK:

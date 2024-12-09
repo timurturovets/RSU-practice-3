@@ -2,7 +2,7 @@ int is_convex(int* result, int count, ...);
 
 int task_5() {
     int result_code, result;
-    result_code = is_convex(&result, 8, 1.431, 3.333333333, 10.9494, 11.34, 41.61351, 5316.53151, 99.876, 5.4321);
+    result_code = is_convex(&result, 8, 0, 0, 2, 0, 2, 1, 0, 1);
 
     switch(result_code) {
         case OK:

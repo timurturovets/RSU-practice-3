@@ -77,7 +77,7 @@ int task_2(int const argc, char** const argv) {
 
     } else if (strcmp(flag, "-c") == 0) {
         char** strings = NULL;
-        int i, str_count = argc - 3; // 3 extra arguments: path, flag and seed;
+        int str_count = argc - 3; // 3 extra arguments: path, flag and seed;
 
         if ((strings = (char**) malloc(sizeof(char*) * argc)) == NULL) {
             PRINT_MEMORY_ALLOCATION_ERROR();
