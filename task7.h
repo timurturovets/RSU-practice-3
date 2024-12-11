@@ -1,7 +1,7 @@
 int check_if_numbers_are_Kaprekar(int const base, ...);
 int check_if_number_is_Kaprekar(int * const result, int const base, char const * const number);
 
-int task_7() {
+int task_7(int argc, char** argv) {
     return check_if_numbers_are_Kaprekar(10, "45", "10A1F", "AAAAAAEEEEEEE", "B52", NULL);
 }
 

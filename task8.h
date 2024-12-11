@@ -1,7 +1,7 @@
 int notation_sum(char ** const result, int const base, int const count, ...);
 int sum_in_base(char ** const result, int const base, char const * const num_1, char const * const num_2);
 
-int task_8() {
+int task_8(int argc, char** argv) {
     char* result = (char*)malloc(sizeof(char) * BUFSIZ);
 
     if (result == NULL) {

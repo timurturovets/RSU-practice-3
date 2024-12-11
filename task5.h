@@ -1,8 +1,8 @@
 int is_convex(int* result, int count, ...);
 
-int task_5() {
+int task_5(int argc, char** argv) {
     int result_code, result;
-    result_code = is_convex(&result, 8, 0, 0, 2, 0, 2, 1, 0, 1);
+    result_code = is_convex(&result, 3, 0.0, 0.0, 2.0, 2.0, 5.0, 0.0);
 
     switch(result_code) {
         case OK:
@@ -21,68 +21,50 @@ int task_5() {
     return result_code;
 }
 
-int is_convex(int* result, int count, ...) {
-    if (count < 3 || count % 2 != 0) return INVALID_PARAMETER;
-
-    int const pairs_count = count / 2;
-
-    double *points_x = NULL, *points_y = NULL;
-    points_x = (double *) malloc(pairs_count * sizeof(double));
-    points_y = (double *) malloc(pairs_count * sizeof(double));
-    if (points_x == NULL || points_y == NULL) return MEMORY_ALLOCATION_ERROR;
-    double *p_x = points_x, *p_y = points_y;
+int is_convex(int * const result, int const count, ...) {
+    if (result == NULL || count < 3) return INVALID_PARAMETER;
 
     va_list p_args;
     va_start(p_args, count);
-    double arg;
-    int i;
-    for (i = 0; i < pairs_count; i++) {
-        arg = va_arg(p_args, double);
-        *p_x++ = arg;
 
-        arg = va_arg(p_args, double);
-        *p_y++ = arg;
-    }
-    va_end(p_args);
+    int i, turn_direction = 0;
+    double prod,
+           x1, y1,
+           x2, y2,
+           x3, y3;
 
-    p_x = points_x;
-    p_y = points_y;
-    double start_x = *p_x++, start_y = *p_y++,
-            curr_x, curr_y,
-            next_x, next_y,
-            vec_x, vec_y,
-            nvec_x, nvec_y,
-            det;
-
-    for (i = 1; i < pairs_count; i++) {
-        curr_x = p_x[i];
-        curr_y = p_y[i];
-
-        vec_x = curr_x - start_x;
-        vec_y = curr_y - start_y;
-
-        next_x = p_x[(i + 1) % pairs_count];
-        next_y = p_y[(i + 1) % pairs_count];
-
-        nvec_x = next_x - start_x;
-        nvec_y = next_y - start_y;
-
-        det = vec_x * nvec_y - nvec_x * vec_y;
-
-        if (det <= 0) {
-            *result = 0;
-
-            free(points_x);
-            free(points_y);
-
-            return OK;
+    for (i = 0; i < count - 2; i++) {
+        if (i == 0) {
+            x1 = va_arg(p_args, double);
+            y1 = va_arg(p_args, double);
+            x2 = va_arg(p_args, double);
+            y2 = va_arg(p_args, double);
+        } else {
+            x1 = x2;
+            y1 = y2;
+            x2 = x3;
+            y2 = y3;
         }
+
+        x3 = va_arg(p_args, double);
+        y3 = va_arg(p_args, double);
+
+        prod = (x2 - x1) * (y3 - y2) - (y2 - y1) * (x3 - x2);
+        if (prod == 0) continue;
+
+        if (turn_direction == 0) {
+            turn_direction = prod > 0 ? 1 : -1;
+            continue;
+        }
+
+        if (!((prod > 0 && turn_direction == -1) || (prod < 0 && turn_direction == 1))) continue;
+
+        va_end(p_args);
+        *result = 0;
+        return OK;
     }
 
+    va_end(p_args);
     *result = 1;
-
-    free(points_x);
-    free(points_y);
-
     return OK;
 }

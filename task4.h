@@ -8,7 +8,7 @@ int search_str_in_file(char const * const substr,
                        int ** result_rows,
                        int ** result_columns);
 
-int task_4() {
+int task_4(int argc, char** argv) {
     char* substr = (char*) malloc(sizeof(char) * BUFSIZ + 1);
     if (substr == NULL) {
         PRINT_MEMORY_ALLOCATION_ERROR();

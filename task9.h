@@ -1,7 +1,7 @@
 #include <string.h>
 int get_roman_representation(char ** const result, int const number);
 
-int task_9() {
+int task_9(int argc, char** argv) {
     char* result = NULL;
     if((result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) {
         PRINT_MEMORY_ALLOCATION_ERROR();

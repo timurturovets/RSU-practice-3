@@ -8,14 +8,24 @@
 #include "task8.h"
 #include "task9.h"
 
+typedef int (task_func) (int, char**);
+
 int main(int argc, char** argv) {
-    return task_1();
-    // return task_2(argc, argv);
-    // return task_3();
-    // return task_4();
-    // return task_5();
-    // return task_6();
-    // return task_7();
-    // return task_8();
-    // return task_9();
+    task_func* tasks[9] = {
+            task_1,
+            task_2,
+            task_3,
+            task_4,
+            task_5,
+            task_6,
+            task_7,
+            task_8,
+            task_9
+    };
+
+    int task_choice;
+    printf("Choose task: ");
+    scanf("%d", &task_choice);
+
+    return tasks[task_choice - 1](argc, argv);
 }

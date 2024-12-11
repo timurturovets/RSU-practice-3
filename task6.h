@@ -3,7 +3,7 @@
 
 int polynomial_value(double* const result, double const point, int const power, ...);
 
-int task_6() {
+int task_6(int argc, char** argv) {
     double result;
     int result_code = polynomial_value(&result, 2.3, 4, 5.3, 4.29, 42.42, 52.52, 81.84);
     switch (result_code) {

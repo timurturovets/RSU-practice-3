@@ -43,7 +43,7 @@ int from_decimal_to_binary(int const num, int const radix, char ** const result)
     return OK;
 }
 
-int task_1() {
+int task_1(int argc, char** argv) {
     int num, radix;
 
     printf("Input your number: ");

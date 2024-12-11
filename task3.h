@@ -3,7 +3,7 @@
 
 int multiple_free(int flag, ...);
 
-int task_3() {
+int task_3(int argc, char** argv) {
     FILE* file1 = fopen("file1.txt", "w");
     char* resource1 = (char*) malloc(BUFSIZ * sizeof(char));
     int* resource2 = (int*) malloc(256 * sizeof(int));
