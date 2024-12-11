@@ -5,30 +5,35 @@ int polynomial_value(double* const result, double const point, int const power, 
 
 int task_6(int argc, char** argv) {
     double result;
-    int result_code = polynomial_value(&result, 2.3, 4, 5.3, 4.29, 42.42, 52.52, 81.84);
+    int result_code = polynomial_value(&result, 2.0, 3, 3.0, 2.0, 1.0, 1.0);
     switch (result_code) {
         case OK:
             printf("Result: %f", result);
-            return OK;
+            break;
+        case INVALID_PARAMETER:
+            PRINT_INVALID_PARAMETER_MESSAGE();
+            break;
         default:
             PRINT_ERROR_MESSAGE();
-            return ERR;
+            break;
     }
+    return result_code;
 }
 
-// реализовать схему Горнера для вычисления многочлена в заданной точке
-int polynomial_value(double* const result, double const point, int const power, ...) {
-    va_list p_args;
-    va_start(p_args, power);
+int polynomial_value(double * const result, double const point, int const power, ...) {
+    if (result == NULL) return INVALID_PARAMETER;
 
-    double coefficient;
-    double value = 0.0;
     int i;
-    for(i = power; i >= 0; i--) {
-        coefficient = va_arg(p_args, double);
-        value += coefficient * pow(point, i);
+    double value = 0.0;
+    va_list p_args;
+
+    va_start(p_args, power);
+    for (i = 0; i < power; i++) {
+        value = value * point + va_arg(p_args, double);
     }
     va_end(p_args);
+
     *result = value;
+
     return OK;
 }
