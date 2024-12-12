@@ -9,7 +9,7 @@ int task_8(int argc, char** argv) {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int result_code = notation_sum(&result, 16, 4, "AAAAAA00090894225", "CCCCCCCCCCCCCCCCCC525", "71555");
+    int result_code = notation_sum(&result, 16, 2, "12AB9", "4DD96");
 
     switch(result_code) {
         case OK:
@@ -49,6 +49,7 @@ int notation_sum(char ** const result, int const base, int const count, ...) {
     for (i = 1; i < count; i++) {
         arg = (char*) va_arg(p_args, void*);
         if(arg == NULL) break;
+
         puts(arg);
         result_code = sum_in_base(&sum, base, prev, arg);
         if (result_code != OK) {
@@ -64,6 +65,90 @@ int notation_sum(char ** const result, int const base, int const count, ...) {
     return OK;
 }
 
+int sum_in_base(char ** const result, int const base, char const * const num_1, char const * const num_2) {
+    if (result == NULL || num_1 == NULL || num_2 == NULL || base < 2 || base > 36) return INVALID_PARAMETER;
+
+    char *prev_result,
+        *all_digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", *p_alldig,
+        *p_result;
+
+    if ((prev_result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    if (*result != NULL) free(*result);
+    if ((*result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) {
+        free(prev_result);
+        return MEMORY_ALLOCATION_ERROR;
+    }
+
+    int len_1, len_2, max_len,
+        i, j, k, Z, V,
+        digit_1, digit_2,
+        sum, carry = 0;
+
+    int const DIG_LEN = strlen(all_digits);
+
+    len_1 = strlen(num_1);
+    len_2 = strlen(num_2);
+    max_len = len_1 > len_2 ? len_1 : len_2;
+
+    i = len_1 - 1;
+    j = len_2 - 1;
+    k = max_len;
+    printf("nums: \n");
+    puts(num_1);
+    puts(num_2);
+    printf("\n");
+    p_result = prev_result;
+    while (i >= 0 || j >= 0 || carry ) {
+        p_alldig = all_digits;
+
+        digit_1 = -1;
+        for (Z = 0; Z < DIG_LEN; Z++) {
+            if (*p_alldig++ == num_1[i]) digit_1 = Z;
+        }
+
+        p_alldig = all_digits;
+        digit_2 = -1;
+        for (Z = 0; Z < DIG_LEN; Z++) {
+            if (*p_alldig++ == num_2[i]) {
+                digit_2 = Z;
+                break;
+            }
+        }
+
+        sum = digit_1 + digit_2 + carry;
+        carry = sum / base;
+
+        p_alldig = all_digits;
+        printf("we got %d\n", sum % base);
+        for (Z = 0; Z < DIG_LEN; Z++) {
+            if (*p_alldig++ == dtoc(sum % base)) {
+                sum = Z;
+                printf("having sum as %d, ", Z);
+                break;
+            }
+        }
+
+        p_result[k--] = dtoc(sum);
+        printf("added %c to res\n", dtoc(sum));
+        i--;
+        j--;
+    }
+    printf("after shit: ");
+    puts(prev_result);
+
+    p_result = *result;
+    while(*++prev_result) {
+        *p_result++ = *prev_result;
+        printf("doing %c\n", *prev_result);
+    }
+    *p_result = '\0';
+
+    printf("after all the shit: ");
+    puts(*result);
+}
+
+/*
 int sum_in_base(char ** const result, int const base, char const * const num_1, char const * const num_2) {
     if (result == NULL || base < 2 ||  base > 36 || num_1 == NULL || num_2 == NULL) return INVALID_PARAMETER;
     int len_1, len_2, mxl,
@@ -107,5 +192,6 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
 
         *result = new_r;
     } else (*result)[l - 3] = '\0';
+
     return OK;
-}
+}*/

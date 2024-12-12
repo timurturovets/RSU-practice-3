@@ -259,20 +259,7 @@ int from_dec_to_any(char ** const result, int num, int b, int should_be_uppercas
 
     return OK;
 }
-/*
-int from_any_to_dec(int * const result, char const * const num, int const b) {
-    if (result == NULL || num == NULL || b < 2 || b > 36) return INVALID_PARAMETER;
 
-    int i, curr_val, len = strlen(num), res = 0, power = 1;
-    char curr_digit;
-
-    for (i = len; i >= 0; i--) {
-        curr_digit = tolower(num[i]);
-
-        if (isalpha(curr_digit)) curr_val = curr_digit - 'a' + 10;
-        else curr_val
-    }
-}*/
 int from_any_to_dec(int * const result, char const * const num, int const base) {
     if (result == NULL || num == NULL || base < 2 || base > 36) return INVALID_PARAMETER;
 
