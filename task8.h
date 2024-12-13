@@ -9,7 +9,7 @@ int task_8(int argc, char** argv) {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int result_code = notation_sum(&result, 16, 2, "92AB9", "8DD96");
+    int result_code = notation_sum(&result, 16, 3, "92AB9", "8DD96", "11111");
 
     switch(result_code) {
         case OK:
@@ -39,25 +39,42 @@ int notation_sum(char ** const result, int const base, int const count, ...) {
     va_list p_args;
     va_start(p_args, count);
 
-    char *arg, *prev;
-    char *sum = NULL;
-    printf("Numbers:\n");
+    char *arg, *prev, *sum, *temp_sum;
+
+    if ((sum = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    /*if ((temp_sum = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) {
+        free(sum);
+        return MEMORY_ALLOCATION_ERROR;
+    }*/
+
     prev = (char*) va_arg(p_args, void*);
-    puts(prev);
-    if (prev == NULL) return INVALID_PARAMETER;
+    if (prev == NULL) {
+        free(sum);
+        //free(temp_sum);
+        return INVALID_PARAMETER;
+    }
 
     for (i = 1; i < count; i++) {
         arg = (char*) va_arg(p_args, void*);
         if(arg == NULL) break;
 
         puts(arg);
-        result_code = sum_in_base(&sum, base, prev, arg);
+        printf("and prev here: ");
+        puts(prev);
+        result_code = sum_in_base(&temp_sum, base, prev, arg);
         if (result_code != OK) {
             if(sum != NULL) free(sum);
             return result_code;
         }
+        printf("temp sum: ");
+        puts(temp_sum);
 
-        prev = sum;
+        prev = (char*) malloc(BUFSIZ * sizeof(char));
+        strcpy(prev, temp_sum);
+
+        printf("prev: ");
+        puts(prev);
     }
 
     *result = prev;
@@ -67,28 +84,40 @@ int notation_sum(char ** const result, int const base, int const count, ...) {
 
 int sum_in_base(char ** const result, int const base, char const * const num_1, char const * const num_2) {
     if (result == NULL || num_1 == NULL || num_2 == NULL || base < 2 || base > 36) return INVALID_PARAMETER;
-
+    printf("received: ");
+    puts(num_1);
+    puts(num_2);
     char *prev_result,
         *all_digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", *p_alldig,
         *p_result;
-
+    printf("received 2: ");
+    puts(num_1);
     if ((prev_result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
-
+    printf("received 3: ");
+    puts(num_1);
     if (*result != NULL) free(*result);
+    printf("received 3.1: ");
+    puts(num_1);
     if ((*result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) {
         free(prev_result);
         return MEMORY_ALLOCATION_ERROR;
     }
-
+    printf("received 4: ");
+    puts(num_1);
     int len_1, len_2, max_len,
         i, j, Z, V,
         digit_1, digit_2,
         sum, carry = 0,
         flag = 0;
-
+    printf("received 5: ");
+    puts(num_1);
     int const DIG_LEN = strlen(all_digits);
 
+    printf("num1 1: ");
+    puts(num_1);
     len_1 = strlen(num_1);
+    printf("num1 2: ");
+    puts(num_1);
     len_2 = strlen(num_2);
     max_len = len_1 > len_2 ? len_1 : len_2;
 
@@ -111,7 +140,7 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
         p_alldig = all_digits;
         digit_2 = 0;
         for (Z = 0; Z < DIG_LEN; Z++) {
-            if (*p_alldig++ == num_2[i]) {
+            if (*p_alldig++ == num_2[j]) {
                 digit_2 = Z;
                 break;
             }
@@ -154,51 +183,3 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
     printf("after all the shit: ");
     puts(*result);
 }
-
-/*
-int sum_in_base(char ** const result, int const base, char const * const num_1, char const * const num_2) {
-    if (result == NULL || base < 2 ||  base > 36 || num_1 == NULL || num_2 == NULL) return INVALID_PARAMETER;
-    int len_1, len_2, mxl,
-        i, m, n,
-        carry, sum;
-
-    mxl = len_1 = strlen(num_1);
-    len_2 = strlen(num_2);
-    if (len_2 > mxl) mxl = len_2;
-
-    *result = (char*) malloc(sizeof(char) * (len_1 + len_2) * 2);
-    if (result == NULL) return MEMORY_ALLOCATION_ERROR;
-
-    i = mxl - 1;
-    m = len_1 - 1;
-    n = len_2 - 1;
-    carry = 0;
-
-    while (i >= 0) {
-        int d1 = m >= 0 ? ctod(num_1[m]) : 0,
-            d2 = n >= 0 ? ctod(num_2[n]) : 0;
-
-            sum = d1 + d2 + carry;
-            carry = sum / base;
-            (*result)[i] = dtoc(sum % base);
-            i--; m--; n--;
-    }
-    int l = strlen(*result);
-    char* new_r = (char*) malloc(l * sizeof(char) + 1);
-
-    if(new_r == NULL) return MEMORY_ALLOCATION_ERROR;
-
-    if (carry > 0) {
-        new_r[0] = dtoc(carry);
-
-        for(i = 1; i < l; i++) new_r[i] = (*result)[i - 1];
-
-        new_r[i - 2] = '\0';
-
-        free(*result);
-
-        *result = new_r;
-    } else (*result)[l - 3] = '\0';
-
-    return OK;
-}*/
