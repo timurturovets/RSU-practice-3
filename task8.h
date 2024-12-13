@@ -147,5 +147,6 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
 
     *p_result = '\0';
 
-    puts(*result);
+    //puts(*result);
+    return OK;
 }
