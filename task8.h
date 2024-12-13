@@ -9,7 +9,7 @@ int task_8(int argc, char** argv) {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int result_code = notation_sum(&result, 16, 2, "12AB9", "4DD96");
+    int result_code = notation_sum(&result, 16, 2, "92AB9", "8DD96");
 
     switch(result_code) {
         case OK:
@@ -81,9 +81,10 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
     }
 
     int len_1, len_2, max_len,
-        i, j, k, Z, V,
+        i, j, Z, V,
         digit_1, digit_2,
-        sum, carry = 0;
+        sum, carry = 0,
+        flag = 0;
 
     int const DIG_LEN = strlen(all_digits);
 
@@ -93,22 +94,22 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
 
     i = len_1 - 1;
     j = len_2 - 1;
-    k = max_len;
+    V = max_len;
     printf("nums: \n");
     puts(num_1);
     puts(num_2);
     printf("\n");
     p_result = prev_result;
-    while (i >= 0 || j >= 0 || carry ) {
+    while (i >= 0 || j >= 0 || carry) {
         p_alldig = all_digits;
 
-        digit_1 = -1;
+        digit_1 = 0;
         for (Z = 0; Z < DIG_LEN; Z++) {
             if (*p_alldig++ == num_1[i]) digit_1 = Z;
         }
 
         p_alldig = all_digits;
-        digit_2 = -1;
+        digit_2 = 0;
         for (Z = 0; Z < DIG_LEN; Z++) {
             if (*p_alldig++ == num_2[i]) {
                 digit_2 = Z;
@@ -117,10 +118,12 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
         }
 
         sum = digit_1 + digit_2 + carry;
+
+        printf("we got %d+%d=%d, carry: %d\n", digit_1, digit_2, sum, carry);
+        flag = carry;
         carry = sum / base;
 
         p_alldig = all_digits;
-        printf("we got %d\n", sum % base);
         for (Z = 0; Z < DIG_LEN; Z++) {
             if (*p_alldig++ == dtoc(sum % base)) {
                 sum = Z;
@@ -129,15 +132,19 @@ int sum_in_base(char ** const result, int const base, char const * const num_1, 
             }
         }
 
-        p_result[k--] = dtoc(sum);
+        p_result[V--] = dtoc(sum);
         printf("added %c to res\n", dtoc(sum));
+
         i--;
         j--;
     }
-    printf("after shit: ");
+    printf("after shit carry: %d, zetochka: %d, SVO: ", carry, flag);
     puts(prev_result);
 
     p_result = *result;
+
+    if (flag) *p_result++ = *prev_result;
+
     while(*++prev_result) {
         *p_result++ = *prev_result;
         printf("doing %c\n", *prev_result);
