@@ -8,15 +8,14 @@ int task_9(int argc, char** argv) {
         return MEMORY_ALLOCATION_ERROR;
     }
 
-    int number;
+    int code, number;
     printf("num: ");
     scanf("%d", &number);
-    // done
-    get_Zeckendorf_representation(&result, number);
+
+    /*get_Zeckendorf_representation(&result, number);
     printf("zeckendorf result: ");
     puts(result);
 
-    //done
     get_roman_representation(&result, number);
     printf("roman result: ");
     puts(result);
@@ -25,8 +24,12 @@ int task_9(int argc, char** argv) {
     printf("to base result: ");
     puts(result);
 
-    int code = from_any_to_dec(&number, "1F",16);
-    printf("test result: %d", number);
+    from_any_to_dec(&number, "1F",16);
+    printf("from base result: %d\n", number);*/
+
+    get_int_mem_dump(&result, number);
+    printf("int mem dump result: ");
+    puts(result);
 
     free(result);
     return OK;

@@ -335,8 +335,26 @@ int from_any_to_dec(int * const result, char const * const num, int const base) 
     return OK;
 }
 
-int get_int_mem_dump(char ** const result, int const var) {
+int get_int_mem_dump(char ** result, int const var) {
     if (result == NULL) return INVALID_PARAMETER;
 
+    if ((*result = (char*) malloc(BUFSIZ * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
 
+    int i, j,
+        index = 0,
+        integer_size = sizeof(int);
+    unsigned char *p_byte = (unsigned char *) &var;
+    char *p_res = *result;
+
+    for (i = 0; i < integer_size; i++) {
+        for (j = 7; j >= 0; j--) p_res[index++] = ((p_byte[i] >> j) & 1) + '0';
+        if (i < integer_size - 1) p_res[index++] = ' ';
+    }
+
+    p_res[index] = '\0';
+    printf("at end: ");
+    puts(p_res);
+
+    return OK;
 }
+
