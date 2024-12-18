@@ -19,8 +19,8 @@ int is_in_array(int* array, size_t size, int value);
 int integer_len(int num);
 int ctod(char c);
 char dtoc(int digit);
-int get_fibonacci_seq(int ** const result, int * const result_count, int const number);
-int get_zeckendorf_representation(char ** const result, unsigned int const number);
+int get_Fibonacci_seq(int ** const result, int * const result_count, int const number);
+int get_Zeckendorf_representation(char ** const result, unsigned int const number);
 int from_dec_to_any(char ** const result, int num, int b, int should_be_uppercase);
 int from_any_to_dec(int * const result, char const * const num, int const b);
 
@@ -98,7 +98,7 @@ char dtoc(int digit) {
     else return -1;
 }
 
-int get_fibonacci_seq(int ** const result, int * const result_count, int const number) {
+int get_Fibonacci_seq(int ** const result, int * const result_count, int const number) {
     if (result == NULL || number < 2) return INVALID_PARAMETER;
 
     if (*result != NULL) free(*result);
@@ -122,12 +122,12 @@ int get_fibonacci_seq(int ** const result, int * const result_count, int const n
     return OK;
 }
 
-int get_zeckendorf_representation(char ** const result, unsigned int const number) {
+/*int get_Zeckendorf_representation(char ** const result, unsigned int const number) {
     if (result == NULL) return INVALID_PARAMETER;
     int i, flag, *fib_res = NULL, count = 0, result_code;
     unsigned int num_copy = number;
 
-    result_code = get_fibonacci_seq(&fib_res, &count, number);
+    result_code = get_Fibonacci_seq(&fib_res, &count, number);
     if (result_code != OK) return result_code;
 
     if (*result != NULL) free(*result);
@@ -159,6 +159,54 @@ int get_zeckendorf_representation(char ** const result, unsigned int const numbe
     }
 
     free(buf);
+    return OK;
+}
+*/
+
+int get_Zeckendorf_representation(char ** const result, unsigned int const number) {
+    if (result == NULL) return INVALID_PARAMETER;
+
+    int i, j, flag, count = 0, new_count = 0,
+        *fib_res = NULL, *used_fibs = NULL, *p_used_fibs,
+        result_code;
+    unsigned int num_copy = number;
+    char *p_res;
+
+    result_code = get_Fibonacci_seq(&fib_res, &count, number);
+    if (result_code != OK) return result_code;
+
+    if (*result != NULL) free(*result);
+    if ((*result = (char*) malloc((count + 1) * sizeof(char))) == NULL) return MEMORY_ALLOCATION_ERROR;
+
+    if ((used_fibs = (int*) malloc((count + 1) * sizeof(int))) == NULL) {
+        free(*result);
+        return MEMORY_ALLOCATION_ERROR;
+    }
+
+    new_count = 0;
+    p_used_fibs = used_fibs;
+    for (i = count - 1; i >= 0 && num_copy > 0; i--) {
+        if (num_copy >= fib_res[i]) {
+            num_copy -= fib_res[i];
+            *p_used_fibs++ = fib_res[i];
+            new_count++;
+        }
+    }
+
+    p_res = *result;
+
+    j = new_count - 1;
+    for (i = 1; i < count; i++) {
+        if (fib_res[i] == used_fibs[j]) {
+            j--;
+            *p_res++ = '1';
+        } else {
+            *p_res++ = '0';
+        }
+    }
+    *p_res++ = '1';
+    *p_res++ = '\0';
+
     return OK;
 }
 

@@ -12,7 +12,7 @@ int task_9(int argc, char** argv) {
     printf("num: ");
     scanf("%d", &number);
     // done
-    get_zeckendorf_representation(&result, number);
+    get_Zeckendorf_representation(&result, number);
     printf("zeckendorf result: ");
     puts(result);
 
